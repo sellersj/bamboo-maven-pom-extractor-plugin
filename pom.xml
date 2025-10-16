@@ -32,6 +32,8 @@
         <bamboo.version>10.2.8</bamboo.version>
         <bamboo.data.version>10.2.8</bamboo.data.version>
         <amps.version>9.7.1</amps.version>
+        <!-- This property ensures consistency between the key in atlassian-plugin.xml and the OSGi bundle's key. -->
+        <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
     </properties>
     <dependencies>
         <dependency>
@@ -101,6 +103,19 @@
                     <productVersion>${bamboo.version}</productVersion>
                     <productDataVersion>${bamboo.data.version}</productDataVersion>
                     <productDataPath>${basedir}/src/test/resources/generated-test-resources.zip</productDataPath>
+                    <instructions>
+                      <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
+                      <Bundle-SymbolicName>${atlassian.plugin.key}</Bundle-SymbolicName>
+                      <Spring-Context>*</Spring-Context>
+                      <Export-Package>
+                      </Export-Package>
+                      <Import-Packages>
+                        !com.opensymphony.*,
+                        !org.objectweb.asm.*,
+                        *;resolution:="optional",
+                      </Import-Packages>
+                      <skipManifestValidation>true</skipManifestValidation>
+                    </instructions>
                 </configuration>
             </plugin>
             <plugin>
