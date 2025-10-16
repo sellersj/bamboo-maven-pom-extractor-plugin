@@ -46,7 +46,7 @@ import com.atlassian.bamboo.task.TaskDefinition;
 import com.atlassian.bamboo.utils.error.ErrorCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import com.opensymphony.xwork.TextProvider;
+import com.atlassian.struts.TextProvider;
 
 /**
  * @author David Ehringer
