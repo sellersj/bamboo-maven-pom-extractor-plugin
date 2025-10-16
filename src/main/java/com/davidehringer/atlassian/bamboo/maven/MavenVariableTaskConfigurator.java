@@ -1,17 +1,14 @@
 /*
  * Copyright 2012 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package com.davidehringer.atlassian.bamboo.maven;
 
@@ -56,10 +53,10 @@ public class MavenVariableTaskConfigurator extends AbstractTaskConfigurator {
     private static final Log LOG = LogFactory.getLog(MavenVariableTaskConfigurator.class);
 
     private static final List<String> FIELDS_TO_COPY = ImmutableList.of(PROJECT_FILE, EXTRACT_MODE, VARIABLE_TYPE,
-            PREFIX_OPTION, PREFIX_OPTION_CUSTOM_VALUE, CUSTOM_VARIABLE_NAME, CUSTOM_ELEMENT, STRIP_SNAPSHOT);
+        PREFIX_OPTION, PREFIX_OPTION_CUSTOM_VALUE, CUSTOM_VARIABLE_NAME, CUSTOM_ELEMENT, STRIP_SNAPSHOT);
 
     private TextProvider textProvider;
-    
+
     public MavenVariableTaskConfigurator(TextProvider textProvider, TaskConfiguratorHelper taskConfiguratorHelper) {
         this.textProvider = textProvider;
         this.taskConfiguratorHelper = taskConfiguratorHelper;
@@ -68,7 +65,7 @@ public class MavenVariableTaskConfigurator extends AbstractTaskConfigurator {
     @NotNull
     @Override
     public Map<String, String> generateTaskConfigMap(@NotNull final ActionParametersMap params,
-            @Nullable final TaskDefinition previousTaskDefinition) {
+                                                     @Nullable final TaskDefinition previousTaskDefinition) {
         final Map<String, String> config = super.generateTaskConfigMap(params, previousTaskDefinition);
         taskConfiguratorHelper.populateTaskConfigMapWithActionParameters(config, params, FIELDS_TO_COPY);
         return config;
@@ -85,7 +82,7 @@ public class MavenVariableTaskConfigurator extends AbstractTaskConfigurator {
 
     @Override
     public void populateContextForEdit(@NotNull final Map<String, Object> context,
-            @NotNull final TaskDefinition taskDefinition) {
+                                       @NotNull final TaskDefinition taskDefinition) {
         super.populateContextForEdit(context, taskDefinition);
         taskConfiguratorHelper.populateContextWithConfiguration(context, taskDefinition, FIELDS_TO_COPY);
         populateContextForAll(context);
@@ -105,17 +102,17 @@ public class MavenVariableTaskConfigurator extends AbstractTaskConfigurator {
 
         Map<String, String> variableTypeOptions = Maps.newHashMap();
         variableTypeOptions.put(VARIABLE_TYPE_JOB,
-                textProvider.getText("maven.extractor.config.option.variableType.job"));
+            textProvider.getText("maven.extractor.config.option.variableType.job"));
         variableTypeOptions.put(VARIABLE_TYPE_RESULT,
-                textProvider.getText("maven.extractor.config.option.variableType.result"));
+            textProvider.getText("maven.extractor.config.option.variableType.result"));
         variableTypeOptions.put(VARIABLE_TYPE_PLAN,
-                textProvider.getText("maven.extractor.config.option.variableType.plan"));
+            textProvider.getText("maven.extractor.config.option.variableType.plan"));
         context.put("variableTypeOptions", variableTypeOptions);
     }
 
     @Override
     public void populateContextForView(@NotNull final Map<String, Object> context,
-            @NotNull final TaskDefinition taskDefinition) {
+                                       @NotNull final TaskDefinition taskDefinition) {
         super.populateContextForView(context, taskDefinition);
         taskConfiguratorHelper.populateContextWithConfiguration(context, taskDefinition, FIELDS_TO_COPY);
     }
@@ -130,11 +127,11 @@ public class MavenVariableTaskConfigurator extends AbstractTaskConfigurator {
             String element = params.getString(CUSTOM_ELEMENT);
             if (StringUtils.isEmpty(variableName)) {
                 errorCollection.addError(CUSTOM_VARIABLE_NAME,
-                        textProvider.getText("maven.extractor.config.custom.variable.name.error"));
+                    textProvider.getText("maven.extractor.config.custom.variable.name.error"));
             }
             if (StringUtils.isEmpty(element)) {
                 errorCollection.addError(CUSTOM_ELEMENT,
-                        textProvider.getText("maven.extractor.config.custom.element.error"));
+                    textProvider.getText("maven.extractor.config.custom.element.error"));
             }
         }
         if (LOG.isDebugEnabled()) {

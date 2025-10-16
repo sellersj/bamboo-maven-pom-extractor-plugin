@@ -1,17 +1,14 @@
 /*
  * Copyright 2012 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package com.davidehringer.atlassian.bamboo.maven;
 
@@ -54,8 +51,11 @@ public class MavenVariableTask implements CommonTaskType {
 
     // Stuff for creating Plan variables
     private PlanManager planManager;
+
     private VariableDefinitionManager variableDefinitionManager;
+
     private BambooAgentMessageSender bambooAgentMessageSender;
+
     private AgentContext agentContext;
 
     public void setAgentContext(AgentContext agentContext) {
@@ -120,29 +120,28 @@ public class MavenVariableTask implements CommonTaskType {
         }
     }
 
-	private void saveAsJobOrResultVariables(List<Variable> variables, TaskConfiguration config) {
-		for (Variable variable : variables) {
-		    String name = variable.getName();
-		    String value = variable.getValue();
+    private void saveAsJobOrResultVariables(List<Variable> variables, TaskConfiguration config) {
+        for (Variable variable : variables) {
+            String name = variable.getName();
+            String value = variable.getValue();
 
-		    final VariableContext variableContext = config.getTaskContext().getCommonContext().getVariableContext();
-		    if(config.areVariablesOfType(RESULT)){
-		    	variableContext.addResultVariable(name, value);
-		    }else if(config.areVariablesOfType(JOB)){
-		    	variableContext.addLocalVariable(name, value);
-		    }else{
-		    	throw new IllegalArgumentException("Unknown variable type '" + config.getVariableType() + "'");
-		    }
-		}
-	}
+            final VariableContext variableContext = config.getTaskContext().getCommonContext().getVariableContext();
+            if (config.areVariablesOfType(RESULT)) {
+                variableContext.addResultVariable(name, value);
+            } else if (config.areVariablesOfType(JOB)) {
+                variableContext.addLocalVariable(name, value);
+            } else {
+                throw new IllegalArgumentException("Unknown variable type '" + config.getVariableType() + "'");
+            }
+        }
+    }
 
-	private void saveAsPlanVariables(List<Variable> variables,
-			TaskConfiguration config) {
-		TaskContext taskContext = (TaskContext) config.getTaskContext();
-		
-		BuildContext parentBuildContext = taskContext.getBuildContext().getParentBuildContext();
-		String topLevelPlanKey = parentBuildContext.getPlanResultKey().getKey();
-		String buildResultKey = taskContext.getBuildContext().getBuildResultKey();
+    private void saveAsPlanVariables(List<Variable> variables, TaskConfiguration config) {
+        TaskContext taskContext = (TaskContext) config.getTaskContext();
+
+        BuildContext parentBuildContext = taskContext.getBuildContext().getParentBuildContext();
+        String topLevelPlanKey = parentBuildContext.getPlanResultKey().getKey();
+        String buildResultKey = taskContext.getBuildContext().getBuildResultKey();
 
         AgentContext agentContext = null;
         try {
@@ -150,25 +149,25 @@ public class MavenVariableTask implements CommonTaskType {
             // I'm not sure of an alternative way to determine if we are running in a remote agent so this
             // ugly hack exists.
             agentContext = RemoteAgent.getContext();
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
 
         }
-		if (agentContext != null) {
-		    // We're in a remote agent and we can't get access to managers
-		    // we want. Send something back home so they can do what we want
-		    // instead.
-		    if (bambooAgentMessageSender == null) {
-		        bambooAgentMessageSender = (BambooAgentMessageSender) ContainerManager
-		                .getComponent("bambooAgentMessageSender");
-		    }
-		    bambooAgentMessageSender.send(new CreateOrUpdateVariableMessage(topLevelPlanKey, buildResultKey,
-		            variables));
-		} else {
-		    BambooVariableManager manager = new BambooVariableManager(planManager, variableDefinitionManager,
-		            config.getBuildLogger());
-		    manager.addOrUpdateVariables(topLevelPlanKey, variables);
-		}
-	}
+        if (agentContext != null) {
+            // We're in a remote agent and we can't get access to managers
+            // we want. Send something back home so they can do what we want
+            // instead.
+            if (bambooAgentMessageSender == null) {
+                bambooAgentMessageSender = (BambooAgentMessageSender) ContainerManager
+                    .getComponent("bambooAgentMessageSender");
+            }
+            bambooAgentMessageSender
+                .send(new CreateOrUpdateVariableMessage(topLevelPlanKey, buildResultKey, variables));
+        } else {
+            BambooVariableManager manager = new BambooVariableManager(planManager, variableDefinitionManager,
+                config.getBuildLogger());
+            manager.addOrUpdateVariables(topLevelPlanKey, variables);
+        }
+    }
 
     private File getPomFile(TaskConfiguration config, BuildLogger buildLogger) {
         File rootDir = config.getBaseDir();
